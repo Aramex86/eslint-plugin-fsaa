@@ -80,6 +80,12 @@ tester.run(
       },
     ],
     invalid: [
+      {
+        // v4.5 parity: self-alias via @features is banned too (own imports are relative)
+        filename: "/proj/src/features/orders-overview/ui/Orders.tsx",
+        code: "import { getOrders } from '@features/orders-overview';",
+        errors: [{ messageId: "selfAlias" }],
+      },
       { // relative cross-SLICE: ui/../.. then ANOTHER feature
         filename: "/proj/src/features/orders-overview/ui/Orders.tsx",
         code: "import { x } from '../../projects-overview';",
