@@ -18,6 +18,8 @@ export default {
         "FSAA boundary: '{{from}}' (layer {{fromLayer}}) imports '{{target}}' (layer {{targetLayer}}) — only layers BELOW yours.",
       crossSlice:
         "FSAA boundary: feature '{{fromSlice}}' imports into feature '{{targetSlice}}' — graduate the code via @entities (data) or @shared (UI).",
+      selfAlias:
+        "FSAA boundary: feature '{{fromSlice}}' imports ITSELF via '{{target}}' — own slice imports are relative ('./', '../model').",
     },
   },
   create(context) {
@@ -37,6 +39,10 @@ export default {
         const tSlice = sliceOf(target);
         if (tSlice && ownSlice && tSlice !== ownSlice) {
           context.report({ node, messageId: "crossSlice", data: { fromSlice: ownSlice, targetSlice: tSlice } });
+        } else if (tSlice && ownSlice && tSlice === ownSlice && spec.startsWith("@features/")) {
+          // v4.5 parity: ANY @features inside features is a violation —
+          // own-slice imports are relative in the template canon.
+          context.report({ node, messageId: "selfAlias", data: { fromSlice: ownSlice, target: spec } });
         }
         return;
       }

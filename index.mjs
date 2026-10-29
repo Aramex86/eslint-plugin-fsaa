@@ -9,7 +9,7 @@ import featureNaming from "./rules/feature-naming.mjs";
 const plugin = {
   meta: {
     name: "eslint-plugin-fsaa",
-    version: "0.1.0",
+    version: "0.1.1",
   },
   rules: {
     "no-raw-fetch": noRawFetch,
