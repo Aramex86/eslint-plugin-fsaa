@@ -78,6 +78,14 @@ tester.run(
         filename: "/proj/src/entities/order/api.ts",
         code: "import { format } from '@shared/ui/format';",
       },
+      { // bare "@/…" form: feature -> shared (downward) — @/* → src/* mapping
+        filename: "/proj/src/features/orders-overview/ui/Orders.tsx",
+        code: "import { Btn } from '@/shared/ui/Btn';",
+      },
+      { // bare "@/…" form: page -> feature (downward)
+        filename: "/proj/src/pages/HomePage.tsx",
+        code: "import { OrdersOverview } from '@/features/orders-overview';",
+      },
     ],
     invalid: [
       {
@@ -104,6 +112,16 @@ tester.run(
       { // shared -> entities: upward
         filename: "/proj/src/shared/ui/format.ts",
         code: "import { getOrders } from '@entities/order';",
+        errors: [{ messageId: "upward" }],
+      },
+      { // REGRESSION (0.2.0): shared barrel re-exporting a feature via bare "@/…" — re-export = import
+        filename: "/proj/src/shared/ui/index.ts",
+        code: "export { PortfolioRule } from '@/features/portfolio-rules';",
+        errors: [{ messageId: "upward" }],
+      },
+      { // REGRESSION (0.2.0): shared -> feature via bare "@/…" plain import
+        filename: "/proj/src/shared/lib/relay.ts",
+        code: "import { fetchOrders } from '@/features/orders-overview';",
         errors: [{ messageId: "upward" }],
       },
     ],

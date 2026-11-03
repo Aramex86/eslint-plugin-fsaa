@@ -39,7 +39,7 @@ export default {
         const tSlice = sliceOf(target);
         if (tSlice && ownSlice && tSlice !== ownSlice) {
           context.report({ node, messageId: "crossSlice", data: { fromSlice: ownSlice, targetSlice: tSlice } });
-        } else if (tSlice && ownSlice && tSlice === ownSlice && spec.startsWith("@features/")) {
+        } else if (tSlice && ownSlice && tSlice === ownSlice && (spec.startsWith("@features/") || spec.startsWith("@/features/"))) {
           // v4.5 parity: ANY @features inside features is a violation —
           // own-slice imports are relative in the template canon.
           context.report({ node, messageId: "selfAlias", data: { fromSlice: ownSlice, target: spec } });
@@ -108,6 +108,10 @@ function resolveTarget(importingFile, spec) {
     if (spec === alias.slice(0, -1) || spec.startsWith(alias)) {
       return "/fsaa/" + targetPrefix + spec.slice(alias.length);
     }
+  }
+  if (spec.startsWith("@/")) {
+    // bare "@/…" form (tsconfig: "@/*" → "./src/*"), e.g. "@/features/orders-overview"
+    return "/fsaa/src/" + spec.slice(2);
   }
   if (spec.startsWith(".") || spec.startsWith("/")) {
     const dir = importingFile.slice(0, importingFile.lastIndexOf("/"));
