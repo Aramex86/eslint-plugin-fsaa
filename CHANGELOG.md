@@ -6,6 +6,7 @@
 - **self-alias parity extended:** `@/features/<own-slice>` inside a feature is flagged same as `@features/<own-slice>` (message `selfAlias`).
 - **re-exports covered in tests:** `export … from` is treated as an import (already the rule's behavior since 0.1.0 — now pinned by regression cases, incl. the shared→feature barrel case reported from a community comment).
 - +4 test cases for the new forms; 35/35 green. Zero runtime deps unchanged (peer `eslint >= 9` only).
+- **CI contract fix:** `"packageManager": "pnpm@10.34.9"` pinned (same as template repos — action-setup reads it when `version` is absent) + `pnpm-lock.yaml` committed, so `pnpm install --frozen-lockfile` has its lockfile.
 
 ## 0.1.1 — 2026-10-29
 
